@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { ACCESSORIES, CHAIRS, DESKS } from "../data/catalog";
-import { ACCESSORY_SLOT_LAYOUTS, DESK_SLOT } from "../data/preview-layout";
-import { getPreviewLayers } from "./preview";
+import {
+  ACCESSORY_HOTSPOTS,
+  ACCESSORY_SLOT_LAYOUTS,
+  DESK_SLOT,
+  getAccessoryCapacity,
+} from "../data/preview-layout";
+import { getPreviewHotspots, getPreviewLayers } from "./preview";
 
 const [monitor27, monitor24, lamp, plant] = ACCESSORIES;
 const base = { deskId: DESKS[0].id, chairId: CHAIRS[0].id, accessories: {} };
@@ -47,5 +52,35 @@ describe("getPreviewLayers", () => {
       accessories: { [lamp.id]: 1, [plant.id]: 1 },
     });
     expect(layers.map((l) => l.product.id).sort()).toEqual([lamp.id, plant.id].sort());
+  });
+});
+
+describe("getPreviewHotspots", () => {
+  const kinds = (selection: Parameters<typeof getPreviewHotspots>[0]) =>
+    getPreviewHotspots(selection).map((h) => h.kind);
+
+  it("has one hotspot position per slot of each kind", () => {
+    for (const [kind, { positions }] of Object.entries(ACCESSORY_HOTSPOTS)) {
+      expect(positions).toHaveLength(getAccessoryCapacity(kind as keyof typeof ACCESSORY_HOTSPOTS));
+    }
+  });
+
+  it("offers every kind on an empty desk, with both monitor models", () => {
+    const hotspots = getPreviewHotspots(base);
+    expect(hotspots.map((h) => h.kind)).toEqual(["monitor", "lamp", "plant"]);
+    expect(hotspots[0].products.map((p) => p.id)).toEqual([monitor27.id, monitor24.id]);
+  });
+
+  it("moves the monitor hotspot to the next slot and hides full kinds", () => {
+    const one = getPreviewHotspots({ ...base, accessories: { [monitor27.id]: 1, [lamp.id]: 1 } });
+    const [first] = getPreviewHotspots(base);
+    expect(one.map((h) => h.kind)).toEqual(["monitor", "plant"]);
+    expect(one[0].left).not.toBe(first.left);
+
+    expect(kinds({ ...base, accessories: { [monitor24.id]: 2, [plant.id]: 1 } })).toEqual(["lamp"]);
+  });
+
+  it("only offers floor items when no desk is selected", () => {
+    expect(kinds({ ...base, deskId: null })).toEqual(["plant"]);
   });
 });

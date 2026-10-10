@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 export function CheckoutLink({
   enabled,
   className,
-  label = "Continue to Checkout",
+  label = "Rent this setup",
 }: {
   enabled: boolean;
   className?: string;

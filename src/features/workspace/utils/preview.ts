@@ -1,5 +1,6 @@
 import { ACCESSORIES, getProductById } from "../data/catalog";
 import {
+  ACCESSORY_HOTSPOTS,
   ACCESSORY_SLOT_LAYOUTS,
   CHAIR_SLOT,
   DESK_SLOT,
@@ -7,10 +8,12 @@ import {
 } from "../data/preview-layout";
 import type {
   AccessoryKind,
+  AccessoryProduct,
   PreviewSlot,
   Product,
   WorkspaceConfiguration,
 } from "../types";
+import { getAccessoryLimit } from "./configuration";
 
 /** A positioned image layer; geometry is in percentages of the stage. */
 export interface PreviewLayer {
@@ -84,4 +87,46 @@ export function describePreview(layers: readonly PreviewLayer[]): string {
   return Array.from(counts, ([name, count]) => (count > 1 ? `${count} × ${name}` : name)).join(
     ", ",
   );
+}
+
+/** An in-scene "+ add" button pointing at the next free slot of a kind. */
+export interface PreviewHotspot {
+  kind: AccessoryKind;
+  label: string;
+  /** Centre of the button, in percentages of the stage. */
+  left: number;
+  top: number;
+  /** Products of this kind that can still be added. */
+  products: AccessoryProduct[];
+}
+
+/** Hotspots for every accessory kind that still has a free slot. */
+export function getPreviewHotspots(selection: PreviewSelection): PreviewHotspot[] {
+  const hasDesk = selection.deskId
+    ? getProductById(selection.deskId)?.category === "desk"
+    : false;
+
+  return ACCESSORY_KINDS.flatMap((kind) => {
+    const { label, onDesk, positions } = ACCESSORY_HOTSPOTS[kind];
+    if (onDesk && !hasDesk) return [];
+
+    const ofKind = ACCESSORIES.filter((product) => product.kind === kind);
+    const shown = ofKind.reduce((sum, { id }) => sum + (selection.accessories[id] ?? 0), 0);
+    const position = positions[shown];
+    const products = ofKind.filter(
+      ({ id }) =>
+        (selection.accessories[id] ?? 0) < getAccessoryLimit(id, selection.accessories),
+    );
+    if (!position || products.length === 0) return [];
+
+    return [
+      {
+        kind,
+        label,
+        left: (position.x / PREVIEW_STAGE.width) * 100,
+        top: (position.y / PREVIEW_STAGE.height) * 100,
+        products,
+      },
+    ];
+  });
 }

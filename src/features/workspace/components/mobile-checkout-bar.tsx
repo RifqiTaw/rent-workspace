@@ -21,7 +21,7 @@ export function MobileCheckoutBar() {
         </div>
         <CheckoutLink
           enabled={hydrated && lineItems.length > 0}
-          label="Checkout"
+          label="Rent setup"
           className="shrink-0"
         />
       </div>

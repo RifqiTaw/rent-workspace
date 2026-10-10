@@ -38,3 +38,30 @@ export const ACCESSORY_SLOT_LAYOUTS: Readonly<
 export function getAccessoryCapacity(kind: AccessoryKind): number {
   return ACCESSORY_SLOT_LAYOUTS[kind].length;
 }
+
+/** A point on the stage, in reference units. */
+export interface StagePoint {
+  x: number;
+  y: number;
+}
+
+/**
+ * In-scene "+ add" hotspots per accessory kind. `positions[n]` is where the
+ * hotspot sits while `n` units are shown, so it always points at the next
+ * free slot; its length must match the kind's capacity. Desk accessories
+ * only make sense once a desk is selected.
+ */
+export const ACCESSORY_HOTSPOTS: Readonly<
+  Record<AccessoryKind, { label: string; onDesk: boolean; positions: readonly StagePoint[] }>
+> = {
+  monitor: {
+    label: "Add monitor",
+    onDesk: true,
+    positions: [
+      { x: 675, y: 170 },
+      { x: 860, y: 245 },
+    ],
+  },
+  lamp: { label: "Add lamp", onDesk: true, positions: [{ x: 420, y: 190 }] },
+  plant: { label: "Place a plant", onDesk: false, positions: [{ x: 905, y: 560 }] },
+};

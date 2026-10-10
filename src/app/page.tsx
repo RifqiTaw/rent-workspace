@@ -11,7 +11,7 @@ export default function BuilderPage() {
           Workspace Builder
         </p>
         <h1 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
-          Design your workspace, rent it in minutes.
+          Build your Bali workspace, rent it in minutes.
         </h1>
       </header>
 
@@ -25,7 +25,10 @@ export default function BuilderPage() {
           <WorkspacePreview />
         </div>
 
-        <section aria-label="Products" className="xl:col-start-1 xl:row-start-1">
+        <section
+          aria-label="Products"
+          className="xl:col-start-1 xl:row-start-1"
+        >
           <ProductPanel />
         </section>
 
