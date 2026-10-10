@@ -20,7 +20,7 @@ export default function BuilderPage() {
         Tablet: preview on top, products and summary side by side.
         Desktop: products | preview | summary, with preview as the focus.
       */}
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-[280px_minmax(0,1fr)_320px] xl:items-start 2xl:grid-cols-[320px_minmax(0,1fr)_360px]">
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-[300px_minmax(0,1fr)_320px] xl:items-start 2xl:grid-cols-[320px_minmax(0,1fr)_360px]">
         <div className="md:col-span-2 xl:col-span-1 xl:col-start-2 xl:row-start-1 xl:sticky xl:top-22">
           <WorkspacePreview />
         </div>

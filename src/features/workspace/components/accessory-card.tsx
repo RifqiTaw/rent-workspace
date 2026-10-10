@@ -58,7 +58,7 @@ export function AccessoryCard({
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 rounded-xl border bg-card p-3 transition-[border-color,background-color,box-shadow]",
+        "flex flex-col gap-3 rounded-xl border bg-card p-3 transition-[border-color,background-color,box-shadow] hover:shadow-sm",
         selected && "border-brand bg-brand-soft/50 shadow-sm",
       )}
     >
@@ -83,6 +83,7 @@ export function AccessoryCard({
             <Button
               variant="outline"
               size="icon"
+              className="size-10 xl:size-9"
               disabled={disabled}
               onClick={() => changeQuantity(quantity - 1)}
               aria-label={quantity === 1 ? `Remove ${product.name}` : `Remove one ${product.name}`}
@@ -94,11 +95,17 @@ export function AccessoryCard({
               aria-label={`${product.name} quantity`}
               className="w-7 text-center text-sm font-medium tabular-nums"
             >
-              {quantity}
+              <span
+                key={quantity}
+                className="inline-block motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 motion-safe:duration-200"
+              >
+                {quantity}
+              </span>
             </output>
             <Button
               variant="outline"
               size="icon"
+              className="size-10 xl:size-9"
               disabled={disabled || !canAdd}
               ref={plusRef}
               focusableWhenDisabled
@@ -112,6 +119,7 @@ export function AccessoryCard({
         ) : (
           <Button
             variant="outline"
+            className="h-10 px-3 xl:h-9"
             ref={addRef}
             focusableWhenDisabled
             disabled={disabled || !canAdd}

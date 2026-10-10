@@ -19,7 +19,7 @@ export function SelectableProductCard({
   onSelect,
 }: SelectableProductCardProps) {
   return (
-    <label className="group relative flex cursor-pointer items-center gap-3 rounded-xl border bg-card p-3 transition-[border-color,background-color,box-shadow] hover:border-foreground/25 has-checked:border-brand has-checked:bg-brand-soft/50 has-checked:shadow-sm has-focus-visible:ring-3 has-focus-visible:ring-ring/50 has-disabled:cursor-not-allowed has-disabled:opacity-60">
+    <label className="group relative flex cursor-pointer items-center gap-3 rounded-xl border bg-card p-3 transition-[border-color,background-color,box-shadow] hover:border-foreground/25 hover:shadow-sm has-checked:border-brand has-checked:bg-brand-soft/50 has-checked:shadow-sm has-focus-visible:ring-3 has-focus-visible:ring-ring/50 has-disabled:cursor-not-allowed has-disabled:opacity-60">
       <input
         type="radio"
         name={name}
@@ -41,7 +41,7 @@ export function SelectableProductCard({
         aria-hidden
         className="flex size-5 shrink-0 items-center justify-center self-start rounded-full border border-border bg-background text-brand-foreground transition-colors group-has-checked:border-brand group-has-checked:bg-brand"
       >
-        <Check className="size-3 opacity-0 transition-opacity group-has-checked:opacity-100" />
+        <Check className="size-3 scale-50 opacity-0 transition-[opacity,scale] duration-200 group-has-checked:scale-100 group-has-checked:opacity-100 motion-reduce:transition-none" />
       </span>
     </label>
   );

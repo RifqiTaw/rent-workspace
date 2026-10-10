@@ -165,6 +165,16 @@ class Drawing {
       half(shaded, darken(color, 0.12)),
       `<path d="M${n1(bx)} ${n1(by)}L${n1(tip[0])} ${n1(tip[1])}" stroke="${darken(color, 0.3)}" stroke-width="1.2" stroke-linecap="round"/>`,
     );
+    for (const t of [0.35, 0.6]) {
+      const [mx, my] = [bx + dx * length * t, by + dy * length * t];
+      for (const side of [1, -1]) {
+        const reach = width * 0.42 * (1 - Math.abs(t - 0.45));
+        const [ex, ey] = [mx + (nx * side * reach + dx * reach * 0.6), my + (ny * side * reach + dy * reach * 0.6)];
+        this.body.push(
+          `<path d="M${n1(mx)} ${n1(my)}L${n1(ex)} ${n1(ey)}" stroke="${darken(color, 0.28)}" stroke-width="1.6" stroke-linecap="round"/>`,
+        );
+      }
+    }
   }
 
   raw(svg, points = []) {
@@ -204,16 +214,31 @@ class Drawing {
 
 const FRAME = "#2c2d30";
 
+/** Square leg that narrows towards the floor (mid-century style). */
+function taperedLeg(d, [cx, cy], [z0, z1], [bottom, top], color) {
+  const [hb, ht] = [bottom / 2, top / 2];
+  d.polygon([[cx - hb, cy + hb, z0], [cx + hb, cy + hb, z0], [cx + ht, cy + ht, z1], [cx - ht, cy + ht, z1]], color);
+  d.polygon([[cx + hb, cy - hb, z0], [cx + hb, cy + hb, z0], [cx + ht, cy + ht, z1], [cx + ht, cy - ht, z1]], darken(color, 0.22));
+}
+
 function oakStandingDesk(d) {
   d.shadow([[-74, -38, 0], [74, -38, 0], [74, 38, 0], [-74, 38, 0]], 0.2, 7);
-  d.box([-64, -30, 0], [7, 60, 3], FRAME);
-  d.box([-62.5, -3, 3], [5, 6, 64], FRAME);
-  d.box([-58, -2.5, 62], [116, 4, 6], FRAME);
-  d.box([57, -30, 0], [7, 60, 3], FRAME);
-  d.box([58.5, -3, 3], [5, 6, 64], FRAME);
-  d.box([-62, -26, 67], [124, 52, 4], FRAME);
-  d.box([38, 31, 65.5], [16, 4, 5.5], "#1f2023");
-  d.polygon([[49, 35, 67.5], [51.5, 35, 67.5], [51.5, 35, 69], [49, 35, 69]], "#7dd3a8", { strokeWidth: 0.3 });
+  const steel = "#3a3c40";
+  for (const x of [-60.5, 60.5]) {
+    // Foot with levelling pads, then a two-stage telescopic column.
+    d.box([x - 3.5, -30, 0.8], [7, 60, 3], FRAME);
+    for (const y of [-28, 25]) d.box([x - 2.5, y, 0], [5, 3, 0.8], "#1c1d1f");
+    d.box([x - 4, -4, 3.8], [8, 8, 34], FRAME);
+    d.box([x - 3, -3, 37.8], [6, 6, 27], steel, { top: lighten(steel, 0.2) });
+    d.box([x - 5, -6, 64.8], [10, 12, 3.2], FRAME);
+  }
+  d.box([-58, -2.5, 64.5], [116, 4, 3.5], FRAME);
+  d.box([-62, -26, 67.8], [124, 52, 3.2], FRAME);
+  // Programmable handset with a height display on the front edge.
+  d.box([34, 31, 66], [18, 4, 5], "#1f2023");
+  d.polygon([[36, 35.05, 67.3], [43, 35.05, 67.3], [43, 35.05, 69.8], [36, 35.05, 69.8]], "#0f1a14", { strokeWidth: 0.3 });
+  d.polygon([[37, 35.1, 67.9], [42, 35.1, 67.9], [42, 35.1, 69.2], [37, 35.1, 69.2]], "#7dd3a8", { strokeWidth: 0.2 });
+  for (const x of [45.5, 49]) d.disc([x, 35.15, 68.5], 0.9, "#55595f");
   d.box([-70, -35, 71], [140, 70, 3], "#d7b38a", { top: "#e6c9a4", left: "#cfa77a", right: "#b78d62" });
   for (const y of [-22, -6, 12, 26]) {
     d.rod([[-66, y, 74.05], [66, y + 2, 74.05]], 0.7, "#dcbc96");
@@ -222,13 +247,18 @@ function oakStandingDesk(d) {
 
 function walnutMinimalDesk(d) {
   d.shadow([[-72, -36, 0], [72, -36, 0], [72, 36, 0], [-72, 36, 0]], 0.18, 7);
-  for (const [x, y] of [[-66, -31], [-66, 28], [63, -31], [63, 28]]) {
-    d.box([x, y, 0], [3, 3, 69], FRAME);
+  const walnut = "#6e4630";
+  for (const [x, y] of [[-64, -29], [-64, 29], [64, -29], [64, 29]]) {
+    d.box([x - 1.4, y - 1.4, 0], [2.8, 2.8, 3], "#c9a45c", { top: "#e2c27e" });
+    taperedLeg(d, [x, y], [3, 68], [2.8, 4.6], walnut);
   }
-  d.box([-63, -28, 68], [126, 56, 4], "#6b4430");
-  d.polygon([[-24, 28, 68.6], [24, 28, 68.6], [24, 28, 71.4], [-24, 28, 71.4]], "#7d5139", { strokeWidth: 0.4 });
-  d.rod([[-6, 28.05, 70], [6, 28.05, 70]], 1.6, "#c9a45c");
+  d.box([-62, -27, 68], [124, 54, 4], walnut);
+  d.polygon([[-24, 27.05, 68.6], [24, 27.05, 68.6], [24, 27.05, 71.4], [-24, 27.05, 71.4]], "#7d5139", { strokeWidth: 0.4 });
+  d.rod([[-6, 27.1, 70], [6, 27.1, 70]], 1.6, "#c9a45c");
   d.box([-70, -35, 72], [140, 70, 2], "#8a5a3c", { top: "#9b6a4a", left: "#7f5236", right: "#68412b" });
+  for (const y of [-24, -4, 18]) {
+    d.rod([[-66, y, 74.05], [66, y + 1.5, 74.05]], 0.6, "#a2714f");
+  }
 }
 
 function starBase(d, legColor, casterColor) {
@@ -267,6 +297,7 @@ function ergoMeshChair(d) {
   d.box([-21, 22, 50], [42, 5, 48], "#26282c", { strokeWidth: 2 });
   const mesh = meshPattern(d);
   d.polygon([[-18, 27.05, 54], [18, 27.05, 54], [18, 27.05, 95], [-18, 27.05, 95]], mesh, { strokeWidth: 0 });
+  d.box([-17, 27, 60], [34, 1.6, 7], "#3b3e44", { strokeWidth: 1.4 });
   d.box([-2, 23, 97], [4, 3, 9], "#232427");
   d.box([-13, 21.5, 105], [26, 5, 11], "#26282c", { strokeWidth: 2 });
   d.polygon([[-11, 26.55, 107], [11, 26.55, 107], [11, 26.55, 114], [-11, 26.55, 114]], mesh, { strokeWidth: 0 });
@@ -278,13 +309,19 @@ function loungeTaskChair(d) {
   d.box([-8, -8, 36], [16, 16, 4], "#8e939a");
   d.box([-24, -22, 40], [48, 46, 11], fabric, { strokeWidth: 3.5 });
   d.box([-3, 16, 42], [6, 5, 12], "#8e939a");
-  d.box([-23, 19, 48], [46, 9, 42], fabric, { strokeWidth: 3.5 });
-  d.polygon(
-    [[-19, 28.1, 52], [19, 28.1, 52], [19, 28.1, 86], [-19, 28.1, 86]],
-    darken(fabric, 0.06),
-    { strokeWidth: 0.6 },
-  );
-  d.rod([[0, 28.15, 54], [0, 28.15, 84]], 0.9, darken(fabric, 0.22));
+  d.box([-23, 19, 48], [46, 9, 40], fabric, { strokeWidth: 3.5 });
+  // Channel-tufted back panel and a rounded top roll.
+  const channels = [-19, -9.5, 0, 9.5, 19];
+  for (let i = 0; i < channels.length - 1; i++) {
+    const [x0, x1] = [channels[i] + 0.6, channels[i + 1] - 0.6];
+    d.polygon([[x0, 28.1, 51], [x1, 28.1, 51], [x1, 28.1, 85], [x0, 28.1, 85]], i % 2 ? fabric : lighten(fabric, 0.05), { strokeWidth: 0.8 });
+  }
+  for (const x of channels.slice(1, -1)) {
+    d.rod([[x, 28.15, 51.5], [x, 28.15, 84.5]], 1.1, darken(fabric, 0.25));
+  }
+  // Round caps extend by half the stroke (~3.75 cm at 24 px), so inset the ends.
+  d.rod([[-19, 23.5, 88.5], [19, 23.5, 88.5]], 24, darken(fabric, 0.04));
+  d.rod([[-20, 24.5, 90], [20, 24.5, 90]], 15, lighten(fabric, 0.1));
 }
 
 function monitor(width, height, screenFrom, screenTo) {

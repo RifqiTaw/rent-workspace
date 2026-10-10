@@ -51,6 +51,9 @@
 <polygon points="-2.8,-91.2 -16.6,-83.2 -16.6,-236.8 -2.8,-244.8" fill="#242426" stroke="#242426" stroke-width="2" stroke-linejoin="round"/>
 <polygon points="-119.2,-312 -2.8,-244.8 -16.6,-236.8 -133,-304" fill="#494a4e" stroke="#494a4e" stroke-width="2" stroke-linejoin="round"/>
 <polygon points="-124.8,-158.3 -25.1,-100.7 -25.1,-231.9 -124.8,-289.5" fill="url(#chair-ergo-mesh-mesh8)" stroke="url(#chair-ergo-mesh-mesh8)" stroke-width="0" stroke-linejoin="round"/>
+<polygon points="-126.4,-173.4 -32.1,-119 -32.1,-141.4 -126.4,-195.8" fill="#3b3e44" stroke="#3b3e44" stroke-width="1.4" stroke-linejoin="round"/>
+<polygon points="-27.7,-121.6 -32.1,-119 -32.1,-141.4 -27.7,-144" fill="#343539" stroke="#343539" stroke-width="1.4" stroke-linejoin="round"/>
+<polygon points="-121.9,-198.4 -27.7,-144 -32.1,-141.4 -126.4,-195.8" fill="#5a5d62" stroke="#5a5d62" stroke-width="1.4" stroke-linejoin="round"/>
 <polygon points="-77.6,-272 -66.5,-265.6 -66.5,-294.4 -77.6,-300.8" fill="#232427" stroke="#232427" stroke-width="0.8" stroke-linejoin="round"/>
 <polygon points="-58.2,-270.4 -66.5,-265.6 -66.5,-294.4 -58.2,-299.2" fill="#212122" stroke="#212122" stroke-width="0.8" stroke-linejoin="round"/>
 <polygon points="-69.3,-305.6 -58.2,-299.2 -66.5,-294.4 -77.6,-300.8" fill="#46474a" stroke="#46474a" stroke-width="0.8" stroke-linejoin="round"/>

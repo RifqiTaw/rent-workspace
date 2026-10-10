@@ -1,5 +1,6 @@
 "use client";
 
+import { Check } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ACCESSORIES, CHAIRS, DESKS } from "../data/catalog";
@@ -67,22 +68,29 @@ export function ProductPanel() {
   const accessoryCount = hydrated
     ? Object.values(accessories).reduce((sum, quantity) => sum + quantity, 0)
     : 0;
-  const status: Record<Category, string | null> = {
-    desk: hydrated && deskId ? "1" : null,
-    chair: hydrated && chairId ? "1" : null,
-    accessory: accessoryCount > 0 ? String(accessoryCount) : null,
+  const status: Record<Category, number> = {
+    desk: hydrated && deskId ? 1 : 0,
+    chair: hydrated && chairId ? 1 : 0,
+    accessory: accessoryCount,
   };
 
   return (
     <Tabs defaultValue="desk" className="gap-4">
-      <TabsList className="h-10! w-full">
+      <TabsList className="h-12! w-full xl:h-11!">
         {CATEGORIES.map(({ value, label }) => (
-          <TabsTrigger key={value} value={value} className="gap-1.5 px-2">
-            {label}
-            {status[value] && (
-              <span className="rounded-full bg-brand px-1.5 text-[0.7rem] leading-4 font-semibold text-brand-foreground tabular-nums">
+          <TabsTrigger key={value} value={value} className="min-w-0 flex-auto gap-1.5 px-2 text-foreground/75">
+            <span className="truncate">{label}</span>
+            {status[value] > 0 && (
+              <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-brand px-1 text-[0.7rem] font-semibold text-brand-foreground tabular-nums">
                 <span className="sr-only">, selected: </span>
-                {status[value]}
+                {value === "accessory" ? (
+                  status[value]
+                ) : (
+                  <>
+                    <span className="sr-only">1</span>
+                    <Check className="size-2.5" aria-hidden />
+                  </>
+                )}
               </span>
             )}
           </TabsTrigger>

@@ -12,8 +12,8 @@ import { RentalDurationPicker } from "./rental-duration-picker";
 
 function SummaryRow({ item }: { item: LineItem }) {
   return (
-    <li className="flex items-center gap-3 py-2.5">
-      <ProductThumbnail product={item.product} className="size-10" />
+    <li className="flex items-center gap-3 py-2">
+      <ProductThumbnail product={item.product} className="size-9" />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">
           {item.quantity > 1 && <span className="tabular-nums">{item.quantity} × </span>}
@@ -35,7 +35,7 @@ export function ConfigurationSummary() {
   return (
     <section
       aria-labelledby="summary-heading"
-      className="flex flex-col gap-5 rounded-2xl border bg-card p-5 shadow-sm xl:max-h-[calc(100dvh-7rem)]"
+      className="flex flex-col gap-5 rounded-2xl border bg-card p-5 shadow-sm xl:max-h-[calc(100dvh-11rem)]"
     >
       <div className="flex items-baseline justify-between gap-2">
         <h2 id="summary-heading" className="text-lg font-semibold tracking-tight">
@@ -48,7 +48,7 @@ export function ConfigurationSummary() {
 
       {/* On desktop the panel is capped to the viewport; only this list scrolls,
           so the total and checkout action stay visible. */}
-      <div className="-mx-1 min-h-0 overflow-y-auto px-1">
+      <div className="-mx-1 min-h-0 overflow-y-auto px-1 xl:pb-4 xl:mask-[linear-gradient(to_bottom,black_calc(100%-1.25rem),transparent)]">
         {!hydrated ? (
           <div className="flex flex-col gap-3" aria-hidden>
             {[0, 1, 2].map((row) => (

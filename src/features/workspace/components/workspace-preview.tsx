@@ -78,7 +78,7 @@ export function WorkspacePreview({ className }: { className?: string }) {
       : "Workspace preview: empty room";
 
   return (
-    <figure className={cn("w-full", className)}>
+    <figure className={cn("relative w-full", className)}>
       <div
         role="img"
         aria-label={label}
@@ -102,8 +102,8 @@ export function WorkspacePreview({ className }: { className?: string }) {
           <div className="absolute inset-0 animate-pulse bg-background/30 motion-reduce:animate-none" />
         )}
       </div>
-      <figcaption className="mt-3 text-xs text-muted-foreground">
-        Illustrative preview using placeholder artwork, not final product renders.
+      <figcaption className="pointer-events-none absolute bottom-2 left-2 rounded-full bg-background/85 px-2.5 py-1 text-[0.7rem] text-muted-foreground shadow-xs ring-1 ring-border/60 backdrop-blur sm:bottom-3 sm:left-3 sm:text-xs">
+        Illustrative placeholder artwork
       </figcaption>
     </figure>
   );

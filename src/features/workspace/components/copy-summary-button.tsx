@@ -29,7 +29,14 @@ export function CopySummaryButton({ text, className }: { text: string; className
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       <Button size="lg" onClick={copy} className="h-11 w-full px-4 text-sm">
-        {status === "copied" ? <Check data-icon="inline-start" /> : <Copy data-icon="inline-start" />}
+        {status === "copied" ? (
+          <Check
+            data-icon="inline-start"
+            className="motion-safe:animate-in motion-safe:zoom-in-50 motion-safe:duration-200"
+          />
+        ) : (
+          <Copy data-icon="inline-start" />
+        )}
         {status === "copied" ? "Copied to clipboard" : "Copy Rental Summary"}
       </Button>
       <p

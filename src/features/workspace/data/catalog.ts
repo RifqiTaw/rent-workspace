@@ -73,9 +73,9 @@ export const CHAIRS = [
     preview: {
       src: "/products/preview/chair-lounge-task.svg",
       width: 312,
-      height: 398,
+      height: 392,
       originX: 156,
-      originY: 299,
+      originY: 293,
     },
   },
 ] as const satisfies readonly ChairProduct[];
