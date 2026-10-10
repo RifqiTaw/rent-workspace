@@ -105,6 +105,16 @@ describe("persistence", () => {
     expect(saved.state.durationMonths).toBe(12);
   });
 
+  it("finishes hydration with defaults when stored JSON is corrupt", async () => {
+    state().selectDesk(DESKS[1].id);
+    storage.setItem(STORAGE_KEY, "{not json");
+
+    await useWorkspaceStore.persist.rehydrate();
+
+    expect(useWorkspaceStore.persist.hasHydrated()).toBe(true);
+    expect(state().deskId).toBe(DEFAULT_CONFIGURATION.deskId);
+  });
+
   it("sanitizes invalid persisted data on rehydrate", async () => {
     storage.setItem(
       STORAGE_KEY,

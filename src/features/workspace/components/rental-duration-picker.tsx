@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { DURATION_DISCOUNT_RATES, RENTAL_DURATIONS } from "../data/rental-terms";
 import type { RentalDuration } from "../types";
 
@@ -9,6 +10,11 @@ interface RentalDurationPickerProps {
 
 /** Segmented single-choice control built on native radios. */
 export function RentalDurationPicker({ value, disabled, onChange }: RentalDurationPickerProps) {
+  // Unique per instance: with Cache Components, the builder stays mounted
+  // (hidden) while /checkout renders its own picker in the same document, and
+  // native radios sharing a name would form one group across both.
+  const name = useId();
+
   return (
     <fieldset disabled={disabled} className="flex flex-col gap-2">
       <legend className="mb-2 text-sm font-medium">Rental duration</legend>
@@ -22,7 +28,7 @@ export function RentalDurationPicker({ value, disabled, onChange }: RentalDurati
             >
               <input
                 type="radio"
-                name="rental-duration"
+                name={name}
                 value={months}
                 checked={value === months}
                 onChange={() => onChange(months)}

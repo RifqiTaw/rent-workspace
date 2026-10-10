@@ -54,6 +54,7 @@ describe("getRentalEstimate", () => {
     expect(estimate.discountRate).toBe(0.15);
     expect(estimate.discountAmount).toBe(Math.round(gross * 0.15));
     expect(estimate.total).toBe(gross - estimate.discountAmount);
+    expect(estimate.monthlyAfterDiscount).toBe(Math.round(estimate.total / 12));
   });
 
   it("returns zero for an empty configuration", () => {

@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { persist, type PersistStorage, type StorageValue } from "zustand/middleware";
 import { getProductById } from "../data/catalog";
 import type { RentalDuration, WorkspaceConfiguration } from "../types";
 import {
@@ -20,6 +20,41 @@ interface WorkspaceActions {
 }
 
 export type WorkspaceStore = WorkspaceConfiguration & WorkspaceActions;
+
+/**
+ * localStorage adapter that never throws. Corrupt or unreadable data is
+ * treated as absent so hydration always completes (zustand's JSON storage
+ * leaves the store un-hydrated when parsing fails), and failed writes
+ * (quota, privacy mode) keep the in-memory state working.
+ */
+const safeLocalStorage: PersistStorage<WorkspaceConfiguration> = {
+  getItem: (name) => {
+    try {
+      const raw = localStorage.getItem(name);
+      const parsed: unknown = raw === null ? null : JSON.parse(raw);
+      // The state itself is validated by `sanitizeConfiguration` in `merge`.
+      return typeof parsed === "object" && parsed !== null && "state" in parsed
+        ? (parsed as StorageValue<WorkspaceConfiguration>)
+        : null;
+    } catch {
+      return null;
+    }
+  },
+  setItem: (name, value) => {
+    try {
+      localStorage.setItem(name, JSON.stringify(value));
+    } catch {
+      // Ignore: the configuration still works for this session.
+    }
+  },
+  removeItem: (name) => {
+    try {
+      localStorage.removeItem(name);
+    } catch {
+      // Ignore, as above.
+    }
+  },
+};
 
 function isCategory(id: string, category: "desk" | "chair"): boolean {
   return getProductById(id)?.category === category;
@@ -62,7 +97,7 @@ export const useWorkspaceStore = create<WorkspaceStore>()(
     {
       name: "monis-workspace-config",
       version: 1,
-      storage: createJSONStorage(() => localStorage),
+      storage: safeLocalStorage,
       // Hydrated manually after mount so server and first client render match.
       skipHydration: true,
       partialize: ({ deskId, chairId, accessories, durationMonths }) => ({

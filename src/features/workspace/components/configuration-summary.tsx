@@ -6,10 +6,9 @@ import { useWorkspaceStore } from "../store/workspace-store";
 import type { LineItem } from "../types";
 import { formatIDR } from "../utils/pricing";
 import { CheckoutLink } from "./checkout-link";
+import { PriceBreakdown } from "./price-breakdown";
 import { ProductThumbnail } from "./product-thumbnail";
 import { RentalDurationPicker } from "./rental-duration-picker";
-
-const PLACEHOLDER = "—";
 
 function SummaryRow({ item }: { item: LineItem }) {
   return (
@@ -32,7 +31,6 @@ function SummaryRow({ item }: { item: LineItem }) {
 export function ConfigurationSummary() {
   const { hydrated, configuration, lineItems, estimate } = useRentalSummary();
   const setDuration = useWorkspaceStore((state) => state.setDuration);
-  const money = (amount: number) => (hydrated ? formatIDR(amount) : PLACEHOLDER);
 
   return (
     <section
@@ -76,30 +74,7 @@ export function ConfigurationSummary() {
         onChange={setDuration}
       />
 
-      <dl className="flex flex-col gap-2 border-t pt-4 text-sm">
-        <div className="flex justify-between gap-4">
-          <dt className="text-muted-foreground">Monthly estimate</dt>
-          <dd className="tabular-nums">{money(estimate.monthlySubtotal)}</dd>
-        </div>
-        <div className="flex justify-between gap-4">
-          <dt className="text-muted-foreground">Duration</dt>
-          <dd className="tabular-nums">
-            {estimate.durationMonths} {estimate.durationMonths === 1 ? "month" : "months"}
-          </dd>
-        </div>
-        {estimate.discountAmount > 0 && (
-          <div className="flex justify-between gap-4 text-brand">
-            <dt>Long-term discount ({Math.round(estimate.discountRate * 100)}%)</dt>
-            <dd className="tabular-nums">−{money(estimate.discountAmount)}</dd>
-          </div>
-        )}
-        <div className="mt-2 flex items-end justify-between gap-4 border-t pt-4">
-          <dt className="font-medium">Estimated total</dt>
-          <dd className="text-2xl font-semibold tracking-tight tabular-nums" aria-live="polite">
-            {money(estimate.total)}
-          </dd>
-        </div>
-      </dl>
+      <PriceBreakdown estimate={estimate} ready={hydrated} className="border-t pt-4" />
 
       <CheckoutLink enabled={hydrated && lineItems.length > 0} className="w-full" />
 

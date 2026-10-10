@@ -35,12 +35,15 @@ export function getRentalEstimate(
   const gross = monthlySubtotal * durationMonths;
   const discountAmount = Math.round(gross * discountRate);
 
+  const total = gross - discountAmount;
+
   return {
     monthlySubtotal,
     durationMonths,
     discountRate,
     discountAmount,
-    total: gross - discountAmount,
+    monthlyAfterDiscount: Math.round(total / durationMonths),
+    total,
   };
 }
 

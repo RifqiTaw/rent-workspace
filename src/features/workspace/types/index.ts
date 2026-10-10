@@ -69,5 +69,7 @@ export interface RentalEstimate {
   durationMonths: RentalDuration;
   discountRate: number;
   discountAmount: number;
+  /** Average monthly cost after the duration discount. */
+  monthlyAfterDiscount: number;
   total: number;
 }
