@@ -47,8 +47,14 @@ export function ConfigurationSummary() {
       </div>
 
       {/* On desktop the panel is capped to the viewport; only this list scrolls,
-          so the total and checkout action stay visible. */}
-      <div className="-mx-1 min-h-0 overflow-y-auto px-1 xl:pb-4 xl:mask-[linear-gradient(to_bottom,black_calc(100%-1.25rem),transparent)]">
+          so the total and checkout action stay visible. Focusable so keyboard
+          users can scroll it (Safari does not focus scroll containers itself). */}
+      <div
+        role="region"
+        aria-label="Selected items"
+        tabIndex={0}
+        className="-mx-1 min-h-0 overflow-y-auto rounded-md px-1 outline-none focus-visible:ring-3 focus-visible:ring-ring/50 xl:pb-4 xl:mask-[linear-gradient(to_bottom,black_calc(100%-1.25rem),transparent)]"
+      >
         {!hydrated ? (
           <div className="flex flex-col gap-3" aria-hidden>
             {[0, 1, 2].map((row) => (
@@ -60,7 +66,7 @@ export function ConfigurationSummary() {
             Your workspace is empty. Choose a desk to get started.
           </p>
         ) : (
-          <ul className="divide-y" aria-label="Selected items">
+          <ul className="divide-y">
             {lineItems.map((item) => (
               <SummaryRow key={item.product.id} item={item} />
             ))}
