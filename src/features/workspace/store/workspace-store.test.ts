@@ -1,5 +1,6 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { ACCESSORIES, CHAIRS, DESKS } from "../data/catalog";
+import { getAccessoryCapacity } from "../data/preview-layout";
 import { DEFAULT_CONFIGURATION } from "../utils/configuration";
 
 class MemoryStorage implements Pick<Storage, "getItem" | "setItem" | "removeItem"> {
@@ -19,7 +20,7 @@ const storage = new MemoryStorage();
 vi.stubGlobal("localStorage", storage);
 
 const STORAGE_KEY = "monis-workspace-config";
-const [monitor, , lamp] = ACCESSORIES;
+const [monitor, otherMonitor, lamp] = ACCESSORIES;
 
 // Imported after stubbing localStorage so persist picks up the stub.
 let useWorkspaceStore: typeof import("./workspace-store").useWorkspaceStore;
@@ -66,13 +67,20 @@ describe("accessories", () => {
     expect(state().accessories).toEqual({ [lamp.id]: 1 });
   });
 
-  it("clamps quantities to the per-product maximum", () => {
+  it("clamps quantities to the kind capacity", () => {
     state().setAccessoryQuantity(monitor.id, 10);
-    expect(state().accessories[monitor.id]).toBe(monitor.preview.placements.length);
+    expect(state().accessories[monitor.id]).toBe(getAccessoryCapacity("monitor"));
 
     state().addAccessory(lamp.id);
     state().addAccessory(lamp.id);
     expect(state().accessories[lamp.id]).toBe(1);
+  });
+
+  it("shares capacity between accessories of the same kind", () => {
+    state().addAccessory(monitor.id);
+    state().addAccessory(otherMonitor.id);
+    state().addAccessory(otherMonitor.id);
+    expect(state().accessories).toEqual({ [monitor.id]: 1, [otherMonitor.id]: 1 });
   });
 
   it("drops the entry when quantity reaches zero", () => {
@@ -116,7 +124,7 @@ describe("persistence", () => {
     expect(state()).toMatchObject({
       deskId: DESKS[1].id,
       chairId: null,
-      accessories: { [monitor.id]: monitor.preview.placements.length },
+      accessories: { [monitor.id]: getAccessoryCapacity("monitor") },
       durationMonths: DEFAULT_CONFIGURATION.durationMonths,
     });
     expect(typeof state().addAccessory).toBe("function");

@@ -3,14 +3,22 @@ export type ProductCategory = "desk" | "chair" | "accessory";
 export type AccessoryKind = "monitor" | "lamp" | "plant";
 
 /**
- * Position of a layer on the preview stage. All values are percentages of the
- * stage box so the preview scales responsively. `x`/`y` locate the asset's
- * bottom-center anchor; `width` is relative to the stage width.
+ * Transparent layer artwork. Sizes are in preview reference units (the
+ * 1200×800 stage). `originX`/`originY` locate the object's physical anchor
+ * (e.g. where it touches the floor or desk) inside the image.
  */
-export interface PreviewPlacement {
+export interface PreviewAsset {
+  src: string;
+  width: number;
+  height: number;
+  originX: number;
+  originY: number;
+}
+
+/** Where an object's anchor sits on the stage, in reference units. */
+export interface PreviewSlot {
   x: number;
   y: number;
-  width: number;
   zIndex: number;
 }
 
@@ -20,27 +28,22 @@ interface BaseProduct {
   description: string;
   /** Mock monthly rental estimate in IDR. Not an official monis.rent price. */
   monthlyPrice: number;
+  /** Square catalog image, separate from the preview layer. */
   thumbnail: string;
+  preview: PreviewAsset;
 }
 
 export interface DeskProduct extends BaseProduct {
   category: "desk";
-  preview: { src: string; placement: PreviewPlacement };
 }
 
 export interface ChairProduct extends BaseProduct {
   category: "chair";
-  preview: { src: string; placement: PreviewPlacement };
 }
 
 export interface AccessoryProduct extends BaseProduct {
   category: "accessory";
   kind: AccessoryKind;
-  /** One placement per unit; its length is the maximum rentable quantity. */
-  preview: {
-    src: string;
-    placements: readonly [PreviewPlacement, ...PreviewPlacement[]];
-  };
 }
 
 export type Product = DeskProduct | ChairProduct | AccessoryProduct;

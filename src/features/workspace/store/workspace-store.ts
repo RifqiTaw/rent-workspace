@@ -41,7 +41,7 @@ export const useWorkspaceStore = create<WorkspaceStore>()(
       setAccessoryQuantity: (id, quantity) => {
         if (getProductById(id)?.category !== "accessory") return;
         const accessories = { ...get().accessories };
-        const clamped = clampAccessoryQuantity(id, quantity);
+        const clamped = clampAccessoryQuantity(id, quantity, accessories);
         if (clamped > 0) accessories[id] = clamped;
         else delete accessories[id];
         set({ accessories });
